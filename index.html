@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:black;
+  font-family: "Segoe UI", sans-serif;
+  overflow:hidden;
+}
+
+.container{
+  display:flex;
+  height:100vh;
+  width:100vw;
+}
+
+.left{
+  width:50%;
+  background:url("PUT_IMAGE_HERE.jpg") center/cover no-repeat;
+}
+
+.right{
+  width:50%;
+  background:linear-gradient(135deg,#ffdde8,#fff);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:40px;
+}
+
+h1{
+  font-size:42px;
+  margin-bottom:20px;
+}
+
+p{
+  font-size:20px;
+  line-height:1.6;
+  max-width:400px;
+}
+
+button{
+  margin-top:30px;
+  padding:14px 28px;
+  border:none;
+  border-radius:999px;
+  background:#ff2f6d;
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+<audio autoplay loop>
+  <source src="PUT_SONG_HERE.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+  <div class="left"></div>
+  <div class="right">
+    <h1>Happy Birthday 🎉</h1>
+    <p>
+      Happy Birthday to my favorite person —<br>
+      beautiful like an angel’s light,<br>
+      and sweet like the quiet happiness<br>
+      the world forgets to name ✨
+    </p>
+    <button onclick="blast()">🎂 Celebrate</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+const confettiInstance = confetti.create(document.getElementById("confetti"), {
+  resize:true,
+  useWorker:true
+});
+
+function blast(){
+  confettiInstance({
+    particleCount:250,
+    spread:150,
+    startVelocity:45,
+    origin:{x:0.75,y:0.5}
+  });
+}
+</script>
+
+</body>
+</html>
