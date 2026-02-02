@@ -14,6 +14,7 @@ body{
   place-items:center;
   background:linear-gradient(135deg,#ffd6e7,#ffeef6);
   font-family:system-ui,sans-serif;
+  overflow:hidden;
 }
 
 .card{
@@ -23,11 +24,41 @@ body{
   padding:20px;
   width:360px;
   text-align:center;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.8s ease;
+}
+
+.card.open{
+  transform:rotateY(180deg);
+}
+
+.front, .back{
+  backface-visibility:hidden;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+
+.back{
+  transform:rotateY(180deg);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
 
 img{
   width:100%;
   border-radius:16px;
+  opacity:0;
+  animation:fadeIn 1s ease 0.5s forwards;
+}
+
+@keyframes fadeIn{
+  to{opacity:1;}
 }
 
 h1{ margin:10px 0; }
@@ -41,6 +72,11 @@ button{
   color:white;
   font-size:16px;
   cursor:pointer;
+  transition:background 0.3s;
+}
+
+button:hover{
+  background:#e0255a;
 }
 
 #message{
@@ -48,12 +84,74 @@ button{
   margin-top:10px;
   font-size:15px;
   line-height:1.6;
+  opacity:0;
+  animation:fadeIn 1s ease 2s forwards;
 }
 
 canvas{
   position:fixed;
   inset:0;
   pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  color:#ff2f6d;
+  font-size:24px;
+  animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-20px);}
+}
+
+.ballon{
+  position:absolute;
+  width:30px;
+  height:40px;
+  background:radial-gradient(circle at 50% 30%, #ff6b9d, #ff2f6d);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:balloonFloat 4s ease-in-out infinite;
+}
+
+@keyframes balloonFloat{
+  0%,100%{transform:translateY(100vh) rotate(0deg);}
+  50%{transform:translateY(50vh) rotate(180deg);}
+}
+
+#candles{
+  display:none;
+  margin-top:20px;
+}
+
+.candle{
+  width:10px;
+  height:50px;
+  background:#f4a261;
+  margin:0 5px;
+  position:relative;
+  border-radius:5px 5px 0 0;
+}
+
+.flame{
+  width:8px;
+  height:15px;
+  background:radial-gradient(ellipse at center, #ffeb3b, #ff9800);
+  position:absolute;
+  top:-15px;
+  left:1px;
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:flicker 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes flicker{
+  to{transform:scale(1.1);}
+}
+
+#blowButton{
+  display:none;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -64,11 +162,21 @@ canvas{
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card">
-  <img src="photo.jpg">
-  <h1>Tap to open 🎁</h1>
-  <button onclick="openGift()">Open Surprise</button>
-  <div id="message"></div>
+<div class="card" id="card">
+  <div class="front">
+    <h1>Tap to open 🎁</h1>
+    <button onclick="openGift()">Open Surprise</button>
+  </div>
+  <div class="back">
+    <img src="photo.jpg">
+    <div id="message"></div>
+    <div id="candles">
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+      <div class="candle"><div class="flame"></div></div>
+    </div>
+    <button id="blowButton" onclick="blowCandles()">Blow Out Candles 🎂</button>
+  </div>
 </div>
 
 <canvas id="confetti"></canvas>
@@ -77,23 +185,34 @@ canvas{
 const text = `Happy Birthday to my favorite person —
 beautiful like an angel’s light,
 and sweet like the quiet happiness
-the world forgets to name ✨`;
+the world forgets to name ✨
+Now, make a wish and blow out the candles!`;
 
 const msg = document.getElementById("message");
 const song = document.getElementById("song");
+const card = document.getElementById("card");
 const confettiInstance = confetti.create(document.getElementById("confetti"),{resize:true});
+const candles = document.getElementById("candles");
+const blowButton = document.getElementById("blowButton");
 
 function openGift(){
-  document.querySelector("button").style.display="none";
-  msg.style.display="block";
-  song.play();
-  typeText(text);
-  confettiInstance({
-    particleCount:250,
-    spread:150,
-    startVelocity:45,
-    origin:{x:0.5,y:0.3}
-  });
+  card.classList.add("open");
+  setTimeout(() => {
+    msg.style.display="block";
+    song.play();
+    typeText(text);
+    confettiInstance({
+      particleCount:250,
+      spread:150,
+      startVelocity:45,
+      origin:{x:0.5,y:0.3}
+    });
+    setTimeout(() => {
+      candles.style.display="flex";
+      blowButton.style.display="block";
+      addFloatingElements();
+    }, 4000); // After typing finishes
+  }, 800); // After card flip
 }
 
 function typeText(str){
@@ -104,6 +223,39 @@ function typeText(str){
     i++;
     if(i>=str.length) clearInterval(interval);
   },40);
+}
+
+function blowCandles(){
+  document.querySelectorAll('.flame').forEach(flame => flame.style.display='none');
+  confettiInstance({
+    particleCount:500,
+    spread:360,
+    startVelocity:30,
+    origin:{x:0.5,y:0.5}
+  });
+  setTimeout(() => {
+    alert("Wish granted! 🎉 Happy Birthday!");
+  }, 1000);
+}
+
+function addFloatingElements(){
+  for(let i=0; i<10; i++){
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '❤️';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDelay = Math.random() * 3 + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }
+  for(let i=0; i<5; i++){
+    const ballon = document.createElement('div');
+    ballon.className = 'ballon';
+    ballon.style.left = Math.random() * 100 + 'vw';
+    ballon.style.animationDelay = Math.random() * 4 + 's';
+    document.body.appendChild(ballon);
+    setTimeout(() => ballon.remove(), 8000);
+  }
 }
 </script>
 
