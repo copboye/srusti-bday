@@ -14,55 +14,23 @@ body{
   place-items:center;
   background:linear-gradient(135deg,#ffd6e7,#ffeef6);
   font-family:system-ui,sans-serif;
-  overflow:hidden;
 }
 
-/* MOVING BACKGROUND TEXT */
-.bg-text {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-.bg-text span {
-  position: absolute;
-  white-space: nowrap;
-  font-size: 22px;
-  color: rgba(0,0,0,0.08);
-  animation: move 25s linear infinite;
-}
-@keyframes move {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100%); }
-}
-
-/* CARD */
 .card{
-  position:relative;
-  z-index:1;
   background:white;
   border-radius:22px;
   box-shadow:0 20px 60px rgba(0,0,0,.2);
-  padding:18px;
+  padding:20px;
   width:360px;
   text-align:center;
-  animation:pop .5s ease;
-}
-@keyframes pop{
-  from{transform:scale(.9);opacity:0;}
-  to{transform:scale(1);opacity:1;}
 }
 
 img{
   width:100%;
   border-radius:16px;
-  object-fit:contain;
 }
 
-h1{
-  margin:10px 0;
-}
+h1{ margin:10px 0; }
 
 button{
   margin-top:14px;
@@ -82,7 +50,6 @@ button{
   line-height:1.6;
 }
 
-/* CONFETTI */
 canvas{
   position:fixed;
   inset:0;
@@ -93,20 +60,12 @@ canvas{
 
 <body>
 
-<!-- BACKGROUND MOVING TEXT -->
-<div class="bg-text">
-  <span style="top:10%;">this is my favorite pic 💖 this is my favorite pic 💖</span>
-  <span style="top:30%; animation-duration: 30s;">this is my favorite pic ✨ this is my favorite pic ✨</span>
-  <span style="top:50%; animation-duration: 35s;">this is my favorite pic 💕 this is my favorite pic 💕</span>
-  <span style="top:70%; animation-duration: 28s;">this is my favorite pic 🌸 this is my favorite pic 🌸</span>
-</div>
-
 <audio id="song">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
-  <img src="photo.jpg" alt="Her Photo">
+  <img src="photo.jpg">
   <h1>Tap to open 🎁</h1>
   <button onclick="openGift()">Open Surprise</button>
   <div id="message"></div>
@@ -131,7 +90,7 @@ function openGift(){
   typeText(text);
   confettiInstance({
     particleCount:250,
-    spread:160,
+    spread:150,
     startVelocity:45,
     origin:{x:0.5,y:0.3}
   });
