@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Happy Birthday</title>
+<title>Happy Birthday Srusti</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -10,25 +10,18 @@
 body{
   margin:0;
   height:100vh;
-  background:black;
-  font-family: "Segoe UI", sans-serif;
-  overflow:hidden;
-}
-
-.container{
   display:flex;
-  height:100vh;
-  width:100vw;
+  font-family:sans-serif;
 }
 
 .left{
   width:50%;
-  background:url("photo.jpg")
-
+  background:url("photo.jpg") center/cover no-repeat;
+}
 
 .right{
   width:50%;
-  background:linear-gradient(135deg,#ffdde8,#fff);
+  background:linear-gradient(135deg,#ffd6e7,#fff);
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -38,8 +31,7 @@ body{
 }
 
 h1{
-  font-size:42px;
-  margin-bottom:20px;
+  font-size:40px;
 }
 
 p{
@@ -49,17 +41,15 @@ p{
 }
 
 button{
-  margin-top:30px;
-  padding:14px 28px;
+  margin-top:20px;
+  padding:12px 26px;
   border:none;
   border-radius:999px;
   background:#ff2f6d;
   color:white;
   font-size:18px;
-  font-weight:700;
   cursor:pointer;
 }
-
 canvas{
   position:fixed;
   inset:0;
@@ -69,37 +59,35 @@ canvas{
 </head>
 
 <body>
-<audio autoplay loop>
-<source src="song.mp3" type="audio/mpeg">
 
+<audio id="song" loop>
+  <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<div class="container">
-  <div class="left"></div>
-  <div class="right">
-    <h1>Happy Birthday 🎉</h1>
-    <p>
-      Happy Birthday to my favorite person —<br>
-      beautiful like an angel’s light,<br>
-      and sweet like the quiet happiness<br>
-      the world forgets to name ✨
-    </p>
-    <button onclick="blast()">🎂 Celebrate</button>
-  </div>
+<div class="left"></div>
+
+<div class="right">
+  <h1>Happy Birthday 🎉</h1>
+  <p>
+    Happy Birthday to my favorite person —<br>
+    beautiful like an angel’s light,<br>
+    and sweet like the quiet happiness<br>
+    the world forgets to name ✨
+  </p>
+  <button onclick="play()">🎂 Celebrate</button>
 </div>
 
 <canvas id="confetti"></canvas>
 
 <script>
-const confettiInstance = confetti.create(document.getElementById("confetti"), {
-  resize:true,
-  useWorker:true
-});
+const song=document.getElementById("song");
+const confettiInstance=confetti.create(document.getElementById("confetti"),{resize:true});
 
-function blast(){
+function play(){
+  song.play();
   confettiInstance({
     particleCount:250,
-    spread:150,
+    spread:140,
     startVelocity:45,
     origin:{x:0.75,y:0.5}
   });
