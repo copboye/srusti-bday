@@ -10,9 +10,8 @@
 body{
   margin:0;
   min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display:grid;
+  place-items:center;
   background:linear-gradient(135deg,#ffd6e7,#ffeef6);
   font-family:system-ui,sans-serif;
 }
@@ -24,32 +23,18 @@ body{
   padding:20px;
   width:360px;
   text-align:center;
-  animation:pop .5s ease;
-}
-
-@keyframes pop{
-  from{transform:scale(.9);opacity:0;}
-  to{transform:scale(1);opacity:1;}
 }
 
 img{
   width:100%;
   border-radius:16px;
-  object-fit:contain;
 }
 
-h1{
-  margin:14px 0 6px;
-}
-
-p{
-  font-size:15px;
-  line-height:1.6;
-}
+h1{ margin:10px 0; }
 
 button{
   margin-top:14px;
-  padding:12px 24px;
+  padding:12px 26px;
   border:none;
   border-radius:999px;
   background:#ff2f6d;
@@ -58,8 +43,11 @@ button{
   cursor:pointer;
 }
 
-.hidden{
+#message{
   display:none;
+  margin-top:10px;
+  font-size:15px;
+  line-height:1.6;
 }
 
 canvas{
@@ -76,38 +64,46 @@ canvas{
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
-<div class="card" id="card">
-  <img src="photo.jpg" alt="Her Photo">
-  <h1>Tap the button 👀</h1>
-  <button onclick="reveal()">🎁 Open Surprise</button>
-
-  <div id="msg" class="hidden">
-    <h1>Happy Birthday 🎉</h1>
-    <p>
-      Happy Birthday to my favorite person —<br>
-      beautiful like an angel’s light,<br>
-      and sweet like the quiet happiness<br>
-      the world forgets to name ✨
-    </p>
-  </div>
+<div class="card">
+  <img src="photo.jpg">
+  <h1>Tap to open 🎁</h1>
+  <button onclick="openGift()">Open Surprise</button>
+  <div id="message"></div>
 </div>
 
 <canvas id="confetti"></canvas>
 
 <script>
-const msg=document.getElementById("msg");
-const song=document.getElementById("song");
-const confettiInstance=confetti.create(document.getElementById("confetti"),{resize:true});
+const text = `Happy Birthday to my favorite person —
+beautiful like an angel’s light,
+and sweet like the quiet happiness
+the world forgets to name ✨`;
 
-function reveal(){
-  msg.classList.remove("hidden");
+const msg = document.getElementById("message");
+const song = document.getElementById("song");
+const confettiInstance = confetti.create(document.getElementById("confetti"),{resize:true});
+
+function openGift(){
+  document.querySelector("button").style.display="none";
+  msg.style.display="block";
   song.play();
+  typeText(text);
   confettiInstance({
     particleCount:250,
-    spread:160,
+    spread:150,
     startVelocity:45,
     origin:{x:0.5,y:0.3}
   });
+}
+
+function typeText(str){
+  let i=0;
+  msg.innerHTML="";
+  const interval=setInterval(()=>{
+    msg.innerHTML += str.charAt(i);
+    i++;
+    if(i>=str.length) clearInterval(interval);
+  },40);
 }
 </script>
 
